@@ -60,47 +60,37 @@ class Tree():
         self.node_list= []
         self.root = None
 
-    """
-    Zybook section 5.10
-    BSTInsertRecursive(parent, nodeToInsert) {
-       if (nodeToInsert⇢key < parent⇢key) {
-          if (parent⇢left is null)
-             parent⇢left = nodeToInsert
-          else
-             BSTInsertRecursive(parent⇢left, nodeToInsert)
-       }
-       else {
-          if (parent⇢right is null)
-             parent⇢right = nodeToInsert
-          else
-             BSTInsertRecursive(parent⇢right, nodeToInsert)
-       }
-    }
-    """
-    # Non-recursive wrapper to deal with adding first node in tree (becomes root)
 
-    #
-    # Your code for insert here...
-    # Add the star object to a new TreeNode, using the 
-    # star_info member of the TreeNode to hold the star
-    # object and using the display_name member of star as
-    # the key variable in the TreeNode
-    #
+    # Zybook section 5.10
+    def BSTInsertRecursive(self, parent, nodeToInsert):
+       if nodeToInsert.key < parent.key:
+          if parent.left is None:
+             parent.left = nodeToInsert
+          else:
+             self.BSTInsertRecursive(parent.left, nodeToInsert)
+
+       else:
+          if parent.right is None:
+             parent.right = nodeToInsert
+          else:
+             self.BSTInsertRecursive(parent.right, nodeToInsert)
+
+
+
     def insert( self, star):
-        pass
+        new_node = TreeNode(star)
+
+        if self.root is None:
+            self.root = new_node
+        else:
+            self.BSTInsertRecursive(self.root, new_node)
 
 
-    """
-    Zybook section 5.7
-    BSTPrintInorder(node) {
-   if (node is null)
-      return                     // "Ret"
 
-   BSTPrintInorder(node⇢left)   // "L"  
-   Print node                    // "Cur"
-   BSTPrintInorder(node⇢right)  // "R"
-    }
-    """
+    #Zybook section 5.7
+
+
+
     
     #
     # Your code to print the nodes in the tree here
@@ -110,7 +100,13 @@ class Tree():
     #
     
     def preorder_print( self, root ):
-        pass
+        if root is None:
+         return
+
+        root.star_info.print_me()
+        self.preorder_print(root.left)
+
+        self.preorder_print(root.right)
 
     """
     ZyBook 5.12.2
@@ -141,7 +137,19 @@ class Tree():
     # Search for a node in the Tree whose key matches the
     # key ardument here
     def search( self, key):
-        pass
+        current_node = self.root
+        while current_node is not None:
+            if current_node.key == key:
+                return current_node
+
+            elif key < current_node.key:
+                current_node = current_node.left
+
+            else:
+                current_node = current_node.right
+
+        return None
+
         
 
 # Utility functions
@@ -199,7 +207,7 @@ def main():
     # 30,000 stars.  Try it last, see what you get.
     #with open('HabHYG_shuffled.csv','r') as csvfile:
     #with open('HabHYG.csv','r') as csvfile:
-    with open('HabHYG_short.csv','r') as csvfile:
+    with open('HabHYG.csv','r') as csvfile:
         lines = csv.reader(csvfile, delimiter=',')
 
         # skip header row
@@ -211,6 +219,7 @@ def main():
         
         obs_processed = 0
         for row in lines:
+           # print(row)
             # habhvg, name, mag, spectral, habit, dist)
             this_star = Star(row[0], row[3], row[16], row[11], row[2], row[12] ) 
             star_tree.insert(this_star)
@@ -231,7 +240,7 @@ def main():
     #
     # Add three or more tests here, including not found case
     #
-    
+    print("***********************************************")
     # test search Procyon
     node_found = star_tree.search( "Procyon")
     if node_found is None:
@@ -239,12 +248,44 @@ def main():
     else:
         node_found.star_info.print_me()
 
+
+    print("***********************************************")
     # test search Kapteyn's Star
     node_found = star_tree.search( "Kapteyn's Star")
     if node_found is None:
         print( "Not found")
     else:
         node_found.star_info.print_me()
+
+    print("************************************************")
+    # test search Sirius
+    node_found = star_tree.search( "Sirius")
+    if node_found is None:
+        print( "Not found")
+    else:
+        node_found.star_info.print_me()
+
+
+    print("************************************************")
+    # test search Kr ger 60
+    node_found = star_tree.search( "Kr ger 60")
+    if node_found is None:
+        print( "Not found")
+    else:
+     node_found.star_info.print_me()
+
+
+
+     print("************************************************")
+    # test search Kr ger 60
+     node_found = star_tree.search( "Fady Moussa")
+    if node_found is None:
+           print( "Not found")
+    else:
+        node_found.star_info.print_me()
+
+
+    print("************************************************")
     
 if __name__ == "__main__":
     main()
